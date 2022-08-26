@@ -1,91 +1,40 @@
-import React, { useEffect, useState } from 'react';
 import './App.css';
-
-export function DDD(props) {
-  const [messageList, setMessageList] = useState([]);
-  const updateMessageList = event => {
-    setMessageList(current => [...current, {id: 1, text: 'ddd', author: 'kkk'}]);
-    event.preventDefault();
-  };
-  /*useEffect(() => {
-    console.log(messageList);
-  }, [messageList]);*/
-  return (
-    <div>
-      {messageList.map((element, index) => {
-        return (
-          <div key={index}>
-            <h2>{element.id} текст: {element.text}, сообщение: {element.author}</h2>
-          </div>
-        );
-      })}
-    </div>
-  );
-  /*
-  <div>
-          {messageList.map((element, index) => {
-            return (
-              <div key={index}>
-                <h2>{element.id} текст: {element.text}, сообщение: {element.author}</h2>
-              </div>
-            );
-          })}
-        </div> 
-   */
-}
+import React, { useEffect, useState } from 'react';
 
 function App() {
   const [messageList, setMessageList] = useState([]);
-  const updateMessageList = (props) => {
-    const formData = new FormData(props.currentTarget);
-    let author = '',
-      message = '';
+  const updateMessageList = event => {
+    if (typeof event === 'undefined')
+      return;
     //
-    for(let [key, value] of formData.entries()) {
-      //message
-      if (key.trim().toLowerCase() == 'message')
-        message = value;
+    if (event.hasOwnProperty('currentTarget')) {
+      const formData = new FormData(event.currentTarget);
+      let author = '',
+        message = '';
+      //
+      for(let [key, value] of formData.entries()) {
+        //message
+        if (key.trim().toLowerCase() === 'message')
+          message = value;
 
-      //author
-      if (key.trim().toLowerCase() == 'author')
-        author = value;
+        //author
+        if (key.trim().toLowerCase() === 'author')
+          author = value;
+      }
+      setMessageList(current => [...current, {text: message, author: author}]);
     }
-    setMessageList(current => [...current, {text: message, author: author}]);
-    //event.preventDefault();
-  };
-  /*const updateMessageList = (event) => {
-    const formData = new FormData(event.currentTarget);
-    let author = '',
-      message = '';
-    //
-    for(let [key, value] of formData.entries()) {
-      //message
-      if (key.trim().toLowerCase() === 'message')
-        message = value;
-
-      //author
-      if (key.trim().toLowerCase() === 'author')
-        author = value;
-    }
-    setMessageList(current => [...current, {text: message, author: author}]);
     event.preventDefault();
-  };*/
-
-  const ggg = () => {
-    //setMessageList(current => [...current, {text: 'message', author: 'author'}]);
   };
-  
+
   useEffect(() => {
-    let gg = messageList.text;
-    let g = 5;
-    ggg();
-    //const lastMessage = messageList[messageList.length - 1];
-    /*if (lastMessage != null) {
-      return () => {
-        setMessageList(current => [...current, {text: 'message', author: 'author'}]);
-      };
-    }*///setMessageList({text: '11', author: '22'});
-  }, [messageList.text]);
+    const props = 
+      <>
+        <input type="text" name='author' value='111'/>
+        <input type="text" name='message' value='222'/>
+      </>;      
+    updateMessageList(props);
+    let gg = 5;
+  }, [messageList]);
 
   return (
     <div className="App">
@@ -101,7 +50,7 @@ function App() {
           {messageList.map((element, index) => {
             return (
               <div key={index}>
-                <h2>{element.id} текст: {element.text}, сообщение: {element.author}</h2>
+                <h2>текст: {element.text}, сообщение: {element.author}</h2>
               </div>
             );
           })}
