@@ -25,19 +25,7 @@ function App() {
           author = value;
       }
       setMessageList(current => [...current, {text: message, author: author}]);
-    };  
-
-    /*if (event.hasOwnProperty('record')) {
-      //ответ
-      if (event.record != null) {
-        const author = event.record.author;
-        const message = event.record.text;
-        let mm = messageList.length;
-        let y = 5;
-      }
-      
-      
-    }*/
+    };
     event.preventDefault();
   };
   const updateRobotAnswer = record => {
