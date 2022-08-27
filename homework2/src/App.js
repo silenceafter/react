@@ -3,11 +3,14 @@ import React, { useEffect, useState } from 'react';
 
 function App() {
   const [messageList, setMessageList] = useState([]);
+  const [robotAnswer, setRobotAnswer] = useState('');
+  //
   const updateMessageList = event => {
     if (typeof event === 'undefined')
       return;
     //
     if (event.hasOwnProperty('currentTarget')) {
+      //новая запись
       const formData = new FormData(event.currentTarget);
       let author = '',
         message = '';
@@ -22,18 +25,32 @@ function App() {
           author = value;
       }
       setMessageList(current => [...current, {text: message, author: author}]);
-    }
+    };  
+
+    /*if (event.hasOwnProperty('record')) {
+      //ответ
+      if (event.record != null) {
+        const author = event.record.author;
+        const message = event.record.text;
+        let mm = messageList.length;
+        let y = 5;
+      }
+      
+      
+    }*/
     event.preventDefault();
+  };
+  const updateRobotAnswer = record => {
+    if (record != null)
+      setRobotAnswer(`Добавлено сообщение пользователя "${record.author.trim().toLowerCase()}"`);
   };
 
   useEffect(() => {
-    const props = 
-      <>
-        <input type="text" name='author' value='111'/>
-        <input type="text" name='message' value='222'/>
-      </>;      
-    updateMessageList(props);
-    let gg = 5;
+    if (messageList.length > 0) {
+      setTimeout(() => {
+        updateRobotAnswer(messageList[messageList.length - 1]);
+    }, 1500);
+    }
   }, [messageList]);
 
   return (
@@ -46,15 +63,20 @@ function App() {
           </fieldset>
           <button type='submit'>Отправить</button>
         </form>
-        {<div>
-          {messageList.map((element, index) => {
-            return (
-              <div key={index}>
-                <h2>текст: {element.text}, сообщение: {element.author}</h2>
-              </div>
-            );
-          })}
-        </div>}
+        {
+          <div>
+            {
+              messageList.map((element, index) => {
+                return (
+                  <div key={index}>
+                    <h2>текст: {element.text}, сообщение: {element.author}</h2>
+                  </div>
+                );
+              })
+            }
+          </div>
+        }
+        <p class="Robot"><i>{robotAnswer}</i></p>
       </header>
     </div>
   );
