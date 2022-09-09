@@ -3,6 +3,11 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import TextField from '@mui/material/TextField';
 import React, { useEffect, useRef, useState } from 'react';
 
@@ -21,14 +26,9 @@ function App() {
       name: 'Чат3'
     }
   ]);
-
   const [messageList, setMessageList] = useState([]);
   const [robotAnswer, setRobotAnswer] = useState('');
   const firstName = useRef(null);
-  //
-  const updateChatList = event => {
-
-  };
 
   const updateMessageList = event => {
     if (typeof event === 'undefined')
@@ -69,23 +69,39 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
+      <Box display="flex" flexDirection="column" alignItems="stretch" padding={1}>
+        <Box display="flex" flexDirection="row" alignItems="stretch" padding={1}>
           {
-            <div>
-            {
-              chatList.map((element, index) => {
-                return (
-                  <div key={index}>
-                    <h2>id: {element.id}, название: {element.name}</h2>
-                  </div>
-                );
-              })
-            }
-          </div>
+            <Box sx={{ border: 1, width: '100%', bgcolor: 'background.paper' }}>
+              <List>
+              {
+                chatList.map((element, index) => {
+                  return (                    
+                    <ListItem button>
+                      <ListItemText sx={{textAlign: 'center'}} primary={'название: ' + element.name}/>
+                    </ListItem>                                          
+                  );
+                })
+              } 
+              </List>               
+            </Box>
           }
-
-          <Box component="form" onSubmit={updateMessageList} noValidate sx={{ mt: 1 }}>
+          <Box sx={{ border: 1, width: '100%', maxWidth: '100%', bgcolor: 'background.paper' }}>
+            <List sx={{ maxHeight: '15rem', overflow: 'auto' }}>
+            {              
+              messageList.map((element, index) => {                
+                return (                  
+                    <ListItem button autoFocus={true}>
+                      <ListItemText sx={{ textAlign: 'center' }} primary={'текст: ' + element.text} secondary={'сообщение: ' + element.author}/>
+                    </ListItem>                  
+                );
+              })              
+            }
+            </List>
+          </Box>
+          
+        </Box>
+        <Box component="form" onSubmit={updateMessageList} noValidate sx={{ mt: 1, overflow: 'auto', maxHeight: '20rem' }}>
             <TextField
               onChange={event => updateMessageList}
               inputRef = {firstName}
@@ -118,10 +134,7 @@ function App() {
             >
               Отправить
             </Button>
-          </Box>
-        </Container>
-        {
-          <div>
+            <div>
             {
               messageList.map((element, index) => {
                 return (
@@ -131,9 +144,10 @@ function App() {
                 );
               })
             }
-          </div>
-        }
-        <p><i>{robotAnswer}</i></p>
+            </div>        
+            <p><i>{robotAnswer}</i></p>
+        </Box>
+      </Box>
       </header>
     </div>
   );
