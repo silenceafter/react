@@ -24,7 +24,6 @@ import { Chats } from './pages/Chats';
 import { Profile} from './pages/Profile';
 import { NotFound } from './pages/NotFound';
 import { Layout } from './components/Layout';
-import { ChatSinglepage } from './pages/ChatSinglepage';
 
 function App() {
   const [chatList, setChatList] = useState([]);
@@ -104,19 +103,19 @@ function App() {
     removeChatList: removeChatList,
     updateMessageList: updateMessageList,
     updateRobotAnswer: updateRobotAnswer,
-    chatRef: chatRef,
-    firstName: firstName
+    chatRef: chatRef
   };
   //
   return (
     <>
       <div className="App">      
         <Routes>
-          <Route path="/" element={<Layout value={data}/>}>
-            <Route index element={<Home value={data}/>} />
-            <Route path="profile" element={<Profile/>} />
-            <Route path="chats" element={<Chats value={data}/>} />
-            <Route path="chats/:id" element={<ChatSinglepage value={data}/>} />
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="/profile" element={<Profile/>} />
+            <Route path="/chats" element={<Chats value={data}/>}>
+              <Route path=":id" element={<Chats value={data}/>} />
+            </Route>
             <Route path="*" element={<NotFound/>} />
           </Route>          
         </Routes>

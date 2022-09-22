@@ -1,7 +1,7 @@
 import { Link, Outlet } from 'react-router-dom';
 import Box from '@mui/material/Box';
 
-const Layout = (props) => {
+const Layout = () => {
     return (
         <div>
             <>

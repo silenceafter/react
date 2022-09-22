@@ -15,11 +15,32 @@ import {
   Link,
   BrowserRouter,
   useParams,
+  useNavigate,
   Outlet,
   Navigate
 } from "react-router-dom";
 
 const Chats = (props) => {
+    const id = useParams();
+    const navigate = useNavigate();
+    //
+    useEffect(() => {
+        //эта часть бесполезна, т.к. роутер очищает все стейты в App.js при запросе 
+        //страницы через адресную строку браузера
+        if (id.hasOwnProperty('id')) {            
+            let find = false;
+            for(let chat of props.value.chatList) {
+                if (chat.id === parseInt(id.id)) {
+                    find = true;
+                    break;
+                }                    
+            }
+            //
+            if (!find)
+                return navigate("/NotFound");
+        }        
+    }, [props.value.chatList]);
+    //
     return (
         <Box display="flex" flexDirection="column" alignItems="stretch" padding={1}>
             <Box display="flex" flexDirection="row" alignItems="stretch" padding={1}>
@@ -44,7 +65,7 @@ const Chats = (props) => {
                     <List sx={{ maxHeight: '15rem', width: '20rem', overflow: 'auto' }}>
                         {           
                             props.value.messageList.map((element, index) => {
-                                if (element.chat == 1) {
+                                if (id.id == element.chat) {
                                     return (                  
                                         <ListItem button key={element.id} autoFocus={true}>
                                             <ListItemText sx={{ textAlign: 'center' }} primary={'текст: ' + element.text} secondary={'сообщение: ' + element.author}/>
@@ -56,10 +77,20 @@ const Chats = (props) => {
                     </List>
                 </Box>          
             </Box>
-            <Box component="form" noValidate sx={{ mt: 1, overflow: 'auto', maxHeight: '20rem' }}>
-            </Box>
+            { 
+                id.hasOwnProperty('id') 
+                    ? <MessageForm value={{props: props.value, id: id.id}}/> 
+                    : <ChatForm value={{props: props.value, id: id.id}} />
+            }
+        </Box>
+    );
+};
+
+const ChatForm = (props) => {
+    return (
+        <Box component="form" noValidate sx={{ mt: 1, overflow: 'auto', maxHeight: '20rem' }}>
             <Button
-                onClick={props.value.updateChatList}
+                onClick={props.value.props.updateChatList}
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
@@ -67,7 +98,7 @@ const Chats = (props) => {
                 Добавить чат
             </Button>
             <Button
-                onClick={props.value.removeChatList}
+                onClick={props.value.props.removeChatList}
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
@@ -76,6 +107,44 @@ const Chats = (props) => {
             </Button>
         </Box>
     );
-}
+};
+
+const MessageForm = (props) => {
+    return (        
+        <Box component="form" onSubmit={props.value.props.updateMessageList(props.value.id)} noValidate sx={{ mt: 1, overflow: 'auto', maxHeight: '20rem' }}>
+                <TextField
+                    inputRef = {props.value.props.firstName}
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="textfield_author"
+                    label="Author"
+                    variant="filled"
+                    name="author"
+                    autoComplete="author"
+                    autoFocus
+                />
+                <TextField
+                    margin="normal"
+                    required
+                    fullWidth
+                    id="textfield_message"
+                    label="Message"
+                    variant="filled"
+                    name="message"
+                    autoComplete="message"
+                />
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                >
+                    Добавить сообщение
+                </Button>                      
+                <p><i>{props.value.props.robotAnswer}</i></p>
+            </Box>
+    );
+};
 
 export {Chats};
