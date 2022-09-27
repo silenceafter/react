@@ -4,14 +4,12 @@ export const messagesSlice = createSlice({
   name: 'message',
   initialState: [],
   reducers: {
-    addChat: (state, action) => {     
-      return [...state, {id: state.length + 1, name: `Чат_${state.length + 1}`,}];
-    },
-    deleteChat: (state, action) => {
-        return state.filter((chat) => chat.id !== state.length);   
+    addMessage: (state, action) => {     
+        const value = action.payload;
+        return [...state, {id: state.length + 1, chat: value.chat, author: value.author, message: value.message}];
     },
   },
 });
 
-export const { addChat, deleteChat } = messagesSlice.actions;
+export const { addMessage } = messagesSlice.actions;
 export default messagesSlice.reducer;
