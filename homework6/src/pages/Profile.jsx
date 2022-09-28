@@ -1,9 +1,10 @@
 import React from 'react';
 import CustomCheckbox from '../components/CustomCheckbox';
-import { useSelector } from 'react-redux';
+import { shallowEqual, useSelector } from 'react-redux';
+import { getProfile } from '../store/profileSelectors.js';
 
 const Profile = () => {
-    const pages = useSelector((state) => state.pages);
+    const pages = useSelector(getProfile, shallowEqual);//((state) => state.pages);
     return (
         <div>
             Page Profile<br/>

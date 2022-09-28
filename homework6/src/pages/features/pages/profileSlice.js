@@ -1,12 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { v4 as uuid } from 'uuid';
 
 export const profileSlice = createSlice({
   name: 'checkbox',
-  initialState: [{id: uuid(), value: false}],
+  initialState: [{id: 1, value: false}],
   reducers: {
     updateCheckbox: (state, action) => {      
-      return [...state, {id: uuid(), value: action.payload}];
+      return [...state, {id: state.length + 1, value: action.payload}];
     },
   },
 });

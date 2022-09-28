@@ -6,17 +6,19 @@ import ListItemText from '@mui/material/ListItemText';
 import TextField from '@mui/material/TextField';
 import React, { useEffect } from 'react';
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from 'react-redux';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import AddChatButton from '../components/AddChatButton.js';
 import DeleteChatButton from '../components/DeleteChatButton.js';
 import CustomMessageForm from '../components/CustomMessageForm.js';
 import CustomRobotAnswer from '../components/CustomRobotAnswer.js';
+import { getChats } from '../store/chatsSelectors.js';
+import { getMessages } from '../store/messagesSelectors.js';
 
 const Chats = (props) => {
     const id = useParams();
     const navigate = useNavigate();
-    const chats = useSelector((state) => state.chats);
-    const messages = useSelector((state) => state.messages);
+    const chats = useSelector(getChats, shallowEqual);//((state) => state.chats);
+    const messages = useSelector(getMessages, shallowEqual);//((state) => state.messages);
     //
     useEffect(() => {
         //эта часть бесполезна, т.к. роутер очищает все стейты в App.js при запросе 
