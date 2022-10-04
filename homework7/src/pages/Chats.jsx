@@ -1,9 +1,7 @@
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import TextField from '@mui/material/TextField';
 import React, { useEffect } from 'react';
 import { Link, useParams, useNavigate } from "react-router-dom";
 import { shallowEqual, useDispatch, useSelector } from 'react-redux';
@@ -17,8 +15,8 @@ import { getMessages } from '../store/messagesSelectors.js';
 const Chats = (props) => {
     const id = useParams();
     const navigate = useNavigate();
-    const chats = useSelector(getChats, shallowEqual);//((state) => state.chats);
-    const messages = useSelector(getMessages, shallowEqual);//((state) => state.messages);
+    const chats = useSelector(getChats, shallowEqual);
+    const messages = useSelector(getMessages, shallowEqual);
     //
     useEffect(() => {
         //эта часть бесполезна, т.к. роутер очищает все стейты в App.js при запросе 
