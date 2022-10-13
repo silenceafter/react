@@ -31,13 +31,13 @@ import { firebase_app } from './services/firebase.js';
 import { onAuthStateChanged } from 'firebase/auth';
 
 function App() {
-  const [authed, setAuthed] = useState(false);
+  /*const [authed, setAuthed] = useState(false);
   useEffect(() => {
     firebase_app.auth().onAuthStateChanged((user) => {
       user ? setAuthed(true) : setAuthed(false);
     })
     console.log(authed);
-  }, []);
+  }, []);*/
   //
   return (
     <>
@@ -49,7 +49,8 @@ function App() {
             <Route path="/chats" element={<Chats/>}>
               <Route path=":id" element={<Chats/>} />
             </Route>
-            <Route path="/api" element={<Api/>} />            
+            <Route path="/api" element={<Api/>} />
+            <Route path="/registration" element={<Registration/>} />
             <Route path="*" element={<NotFound/>} />
           </Route>          
         </Routes>
