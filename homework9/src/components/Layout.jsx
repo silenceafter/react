@@ -1,5 +1,9 @@
 import { Link, Outlet } from 'react-router-dom';
 import Box from '@mui/material/Box';
+import React, { useState, useEffect } from 'react';
+import { firebase_app } from '../services/firebase.js';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import Auth from './Auth';
 
 const Layout = () => {
     return (
@@ -11,8 +15,8 @@ const Layout = () => {
                         <Link to="/">Home</Link>
                         <Link to="/chats">Chats</Link>
                         <Link to="/profile">Profile</Link>
-                        <Link to="/api">Api</Link> 
-                        <Link to="/registration">Registration</Link>
+                        <Link to="/api">Api</Link>
+                        <Auth />
                     </Box>
                 </header>
                 <main className="App-main">
@@ -28,3 +32,7 @@ const Layout = () => {
 };
 
 export {Layout};
+/*
+<Link to="/registration">Registration</Link>
+<Link to="/login">Login</Link>
+*/

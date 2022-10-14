@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
-//import { shallowEqual, useSelector } from 'react-redux';
-//import { getProfile } from '../store/profileSelectors.js';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import { firebase_app } from '../services/firebase.js';
+import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged } from "firebase/auth";
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { getAuthed } from '../store/authedSelectors';
+import { useNavigate } from "react-router-dom";
+import { updateAuthed } from '../pages/features/pages/authedSlice';
 
 const Registration = () => {
-    //const pages = useSelector(getProfile, shallowEqual);
-    const [email, setEmail] = useState('');
+    return (<></>);
+    /*const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
 
     const handleEmailChange = (e) => {
         setEmail(e.target.value);
@@ -18,19 +21,34 @@ const Registration = () => {
         setPassword(e.target.value);
     }
 
-    const registrationHandler = (event, id) => {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    const authed = useSelector(getAuthed, shallowEqual);
+    //
+    const registrationHandler = (event) => {
         event.preventDefault();
-        /*const author = event.currentTarget[0].value;
-        const message = event.currentTarget[1].value;
-        dispatch(addMessage({chat: id.value, author: author, message: message}));
-        dispatch(robotAnswer(author));*/
-        console.log('yyy');
+        const auth = getAuth(firebase_app);
+        createUserWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+                //create
+                onAuthStateChanged(auth, (user) => 
+                    user 
+                        ? dispatch(updateAuthed(true)) 
+                        : dispatch(updateAuthed(false))
+                );
+
+                //редирект
+                if (!authed)
+                    return navigate("/");
+            })
+            .catch(error => console.log(error.message));
+        console.log(auth);
     };
     //
     return (
         <>
             <br/>
-            <Box component="form" onSubmit={(e) => registrationHandler(e, 0)} noValidate sx={{ mt: 1, overflow: 'auto', maxHeight: '20rem' }}>
+            <Box component="form" onSubmit={(e) => registrationHandler(e)} noValidate sx={{ mt: 1, overflow: 'auto', maxHeight: '20rem' }}>
                 <TextField
                     helperText="Введите логин"
                     id="login"
@@ -55,6 +73,6 @@ const Registration = () => {
                 </Button>
             </Box>            
         </>  
-    );
-}
+    );*/
+};
 export {Registration};

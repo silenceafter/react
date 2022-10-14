@@ -27,16 +27,17 @@ import { Layout } from './components/Layout';
 import { Api } from './pages/Api';
 import { Registration } from './pages/Registration';
 import { Login } from './pages/Login';
+import { Logout } from './pages/Logout';
 import { firebase_app } from './services/firebase.js';
-import { onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { CustomRoutes } from './pages/CustomRoutes.jsx';
 
 function App() {
   /*const [authed, setAuthed] = useState(false);
+  //
   useEffect(() => {
-    firebase_app.auth().onAuthStateChanged((user) => {
-      user ? setAuthed(true) : setAuthed(false);
-    })
-    console.log(authed);
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => user ? setAuthed(true) : setAuthed(false));
   }, []);*/
   //
   return (
@@ -51,8 +52,10 @@ function App() {
             </Route>
             <Route path="/api" element={<Api/>} />
             <Route path="/registration" element={<Registration/>} />
+            <Route path="/login" element={<Login/>} />
+            <Route path="/logout" element={<Logout/>} />
             <Route path="*" element={<NotFound/>} />
-          </Route>          
+          </Route>
         </Routes>
       </div>
     </>
@@ -60,3 +63,7 @@ function App() {
 }
 
 export default App;
+/*
+<Route path="/registration" element={<Registration/>} />
+<Route path="/login" element={<Login/>} />
+*/
