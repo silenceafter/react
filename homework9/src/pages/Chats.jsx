@@ -4,32 +4,38 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { useSelector } from 'react-redux';
 import AddChatButton from '../components/AddChatButton.js';
 import DeleteChatButton from '../components/DeleteChatButton.js';
 import CustomMessageForm from '../components/CustomMessageForm.js';
 import CustomRobotAnswer from '../components/CustomRobotAnswer.js';
 import { getAuth } from "firebase/auth";
 import { getDatabase, ref, onValue } from "firebase/database";
+import { initialChat } from '../pages/features/pages/chatsSlice';
+import { initialMessage } from '../pages/features/pages/messagesSlice';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import { getChats } from '../store/chatsSelectors.js';
+import { getMessages } from '../store/messagesSelectors';
 
 const Chats = (props) => {
     const id = useParams();
     const navigate = useNavigate();
-    const [chats, setChats] = useState([]);//const chats = useSelector(getChats, shallowEqual);
-    const [messages, setMessages] = useState([]);//const messages = useSelector(getMessages, shallowEqual);
+    const dispatch = useDispatch();
+    //
+    const chats = useSelector(getChats, shallowEqual);
+    const messages = useSelector(getMessages, shallowEqual);
     const authed = useSelector(state => state.authed);
 
-    const updateChats = chat => {
+    /*const updateChats = chat => {
         if (typeof chat === 'undefined')
             return;
         setChats(chat);
-    };
+    };*/
     //
-    const updateMessages = message => {
+    /*const updateMessages = message => {
         if (typeof message === 'undefined')
             return;
         setMessages(message);
-    };
+    };*/
     
     useEffect(() => {
         //проверка доступа
@@ -55,24 +61,11 @@ const Chats = (props) => {
     }, [chats]);
 
     useEffect(() => {
-        //загрузка чатов
-        const db = getDatabase();
-        const auth = getAuth();
-        //
-        if (auth == null) 
-            throw new Error('auth не найден');
-        if (!auth.hasOwnProperty('currentUser'))
-            throw new Error('auth.currentUser не найдено');
-        
-        const chats_ref = ref(db, 'chats');
-        onValue(chats_ref, (snapshot) => updateChats(snapshot.val()));
-
-        //загрузка сообщений
-        const messages_ref = ref(db, 'messages');
-        onValue(messages_ref, (snapshot) => updateMessages(snapshot.val()));
+        //загрузка чатов/сообщений
+        dispatch(initialChat());
+        dispatch(initialMessage());
     }, []);
-
-   
+    console.log(useSelector((state) => state));//вывод значений стора
     //
     if (authed) {
         return (

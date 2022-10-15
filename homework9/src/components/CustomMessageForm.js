@@ -1,11 +1,10 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { addMessage, initialMessage } from '../pages/features/pages/messagesSlice';
 import { addAnswer } from '../pages/features/pages/robotSlice.js';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import { getAuth } from "firebase/auth";
-import { getDatabase, ref, set, onValue, numChildren } from "firebase/database";
 
 function robotAnswer(author) {
     return function (dispatch) {
@@ -19,37 +18,9 @@ export default function CustomMessageForm(id) {
         event.preventDefault();
         const author = event.currentTarget[0].value;
         const message = event.currentTarget[1].value;
-        //dispatch(addMessage({chat: id.value, author: author, message: message}));
-        //firebase
-        const db = getDatabase();
-        const auth = getAuth();
         //
-        if (auth == null) 
-            throw new Error('auth не найден');
-        if (!auth.hasOwnProperty('currentUser'))
-            throw new Error('auth.currentUser не найдено');
-    
-        //email учетной записи
-        const email = auth.currentUser.email;
-        if (email.trim() != '') {
-        //количество элементов
-        const dbRef = ref(db, '/messages');
-        let total = 0;
-        onValue(dbRef, (snapshot) => {
-            snapshot.forEach((item) => {
-            total += 1;
-            });
-        });
-
-        set(ref(db, `messages/${total+1}`), {
-            email: email,
-            id: total+1,
-            chat: id.value,
-            author: author,
-            message: message
-        });
-        }
-        //
+        dispatch(addMessage({chat: id.value, author: author, message: message}));
+        dispatch(initialMessage());        
         dispatch(robotAnswer(author));
     };
     console.log(useSelector((state) => state));//вывод значений стора
