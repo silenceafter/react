@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addMessage } from '../pages/features/pages/messagesSlice.js';
+import { addMessage, initialMessage } from '../pages/features/pages/messagesSlice';
 import { addAnswer } from '../pages/features/pages/robotSlice.js';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -12,13 +12,15 @@ function robotAnswer(author) {
     }
   }
 
-export default function CustomMessageForm(id) {    
+export default function CustomMessageForm(id) {
     const dispatch = useDispatch();
     const addMessageHandler = (event, id) => {
         event.preventDefault();
         const author = event.currentTarget[0].value;
         const message = event.currentTarget[1].value;
+        //
         dispatch(addMessage({chat: id.value, author: author, message: message}));
+        dispatch(initialMessage());        
         dispatch(robotAnswer(author));
     };
     console.log(useSelector((state) => state));//вывод значений стора

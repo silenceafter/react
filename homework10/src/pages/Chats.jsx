@@ -4,25 +4,39 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import React, { useState, useEffect } from 'react';
 import { Link, useParams, useNavigate } from "react-router-dom";
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import AddChatButton from '../components/AddChatButton.js';
 import DeleteChatButton from '../components/DeleteChatButton.js';
 import CustomMessageForm from '../components/CustomMessageForm.js';
 import CustomRobotAnswer from '../components/CustomRobotAnswer.js';
+import { getAuth } from "firebase/auth";
+import { getDatabase, ref, onValue } from "firebase/database";
+import { initialChat } from '../pages/features/pages/chatsSlice';
+import { initialMessage } from '../pages/features/pages/messagesSlice';
+import { shallowEqual, useDispatch, useSelector } from 'react-redux';
 import { getChats } from '../store/chatsSelectors.js';
-import { getMessages } from '../store/messagesSelectors.js';
-import { getAuthed } from '../store/authedSelectors.js';
-import { firebase_app } from '../services/firebase.js';
-import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
-import { getDatabase, ref, set, onValue } from "firebase/database";
+import { getMessages } from '../store/messagesSelectors';
 
 const Chats = (props) => {
     const id = useParams();
     const navigate = useNavigate();
-    const [chats, setChats] = useState([]);//const chats = useSelector(getChats, shallowEqual);
+    const dispatch = useDispatch();
+    //
+    const chats = useSelector(getChats, shallowEqual);
     const messages = useSelector(getMessages, shallowEqual);
     const authed = useSelector(state => state.authed);
+
+    /*const updateChats = chat => {
+        if (typeof chat === 'undefined')
+            return;
+        setChats(chat);
+    };*/
     //
+    /*const updateMessages = message => {
+        if (typeof message === 'undefined')
+            return;
+        setMessages(message);
+    };*/
+    
     useEffect(() => {
         //проверка доступа
         if (!authed)
@@ -32,6 +46,9 @@ const Chats = (props) => {
         if (id.hasOwnProperty('id')) {
             let find = false;
             for(let chat of chats) {
+                if (chat.hasOwnProperty('id')) {
+                    console.log(chat);
+                }
                 if (chat.id === parseInt(id.id)) {
                     find = true;
                     break;
@@ -39,52 +56,16 @@ const Chats = (props) => {
             }
             //
             if (!find)
-                return navigate("/NotFound");            
+                return navigate("/NotFound");
         }
-
-        //загрузка данных из БД
-        const db = getDatabase();
-        const auth = getAuth();
-        //
-        if (auth == null) 
-            throw new Error('auth не найден');
-        if (!auth.hasOwnProperty('currentUser'))
-            throw new Error('auth.currentUser не найдено');
-        
-        const db_ref = ref(db, 'chats');
-        onValue(db_ref, (snapshot) => setChats(snapshot.val()));
     }, [chats]);
 
-    //загрузка данных из БД
-    /*let email = '';
-    const db = getDatabase();
-    const auth = getAuth();
-    //
-    if (auth == null) 
-        throw new Error('auth не найден');
-    if (!auth.hasOwnProperty('currentUser'))
-        throw new Error('auth.currentUser не найдено');
-    
-    const myread = ref(db, 'chats');
-    onValue(myread, (snapshot) => {
-        const data = snapshot.val();
-        setChats(data);
-    })
-    console.log(chats);*/
-    /*email = auth.currentUser.email;
-    if (email.trim() != '') {
-        /*set(ref(db, 'chats/1'), {
-            email: email,
-            id: '1',
-            name: `Чат_1`,
-            messages: {}
-        });*/
-    /*    const myread = ref(db, 'chats');
-        onValue(myread, (snapshot) => {
-            const data = snapshot.val();
-            console.log(data);
-        })
-    }*/
+    useEffect(() => {
+        //загрузка чатов/сообщений
+        dispatch(initialChat());
+        dispatch(initialMessage());
+    }, []);
+    console.log(useSelector((state) => state));//вывод значений стора
     //
     if (authed) {
         return (
