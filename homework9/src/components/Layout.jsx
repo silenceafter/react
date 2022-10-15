@@ -32,7 +32,3 @@ const Layout = () => {
 };
 
 export {Layout};
-/*
-<Link to="/registration">Registration</Link>
-<Link to="/login">Login</Link>
-*/

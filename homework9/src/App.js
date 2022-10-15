@@ -30,16 +30,8 @@ import { Login } from './pages/Login';
 import { Logout } from './pages/Logout';
 import { firebase_app } from './services/firebase.js';
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { CustomRoutes } from './pages/CustomRoutes.jsx';
 
 function App() {
-  /*const [authed, setAuthed] = useState(false);
-  //
-  useEffect(() => {
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => user ? setAuthed(true) : setAuthed(false));
-  }, []);*/
-  //
   return (
     <>
       <div className="App">      
@@ -63,7 +55,3 @@ function App() {
 }
 
 export default App;
-/*
-<Route path="/registration" element={<Registration/>} />
-<Route path="/login" element={<Login/>} />
-*/

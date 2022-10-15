@@ -10,8 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { updateAuthed } from '../pages/features/pages/authedSlice';
 
 const Registration = () => {
-    return (<></>);
-    /*const [email, setEmail] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const handleEmailChange = (e) => {
@@ -38,12 +37,12 @@ const Registration = () => {
                 );
 
                 //редирект
-                if (!authed)
+                if (authed)//!
                     return navigate("/");
             })
-            .catch(error => console.log(error.message));
-        console.log(auth);
+            .catch(error => console.log(error.message));        
     };
+    console.log(useSelector((state) => state));//вывод значений стора
     //
     return (
         <>
@@ -73,6 +72,6 @@ const Registration = () => {
                 </Button>
             </Box>            
         </>  
-    );*/
+    );
 };
 export {Registration};

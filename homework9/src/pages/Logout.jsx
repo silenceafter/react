@@ -5,14 +5,11 @@ import { firebase_app } from '../services/firebase.js';
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { updateAuthed } from '../pages/features/pages/authedSlice';
 import { useNavigate } from "react-router-dom";
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
-import { getAuthed } from '../store/authedSelectors';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Logout = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    //
-    const authed = useSelector(getAuthed, shallowEqual);
     //
     const logoutHandler = (event) => {
         event.preventDefault();
@@ -20,19 +17,22 @@ const Logout = () => {
         signOut(auth)
             .then((userCredential) => {
                 //out
+                let authed = false;
                 onAuthStateChanged(auth, (user) => 
-                    user 
-                        ? dispatch(updateAuthed(true)) 
-                        : dispatch(updateAuthed(false))
+                    user
+                        ? authed = true 
+                        : authed = false
                 );
-
+                dispatch(updateAuthed(authed));
+                
                 //редирект
                 if (!authed)
                     return navigate("/");
+                throw new Error("Ошибка logout");
             })
             .catch(error => console.log(error.message));
-        console.log(auth);
     };
+    console.log(useSelector((state) => state));//вывод значений стора
     //
     return (
         <>
