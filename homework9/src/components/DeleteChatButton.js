@@ -1,15 +1,35 @@
-import React, { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { deleteChat } from '../pages/features/pages/chatsSlice';
+import React from 'react';
 import Button from '@mui/material/Button';
+import { getAuth } from "firebase/auth";
+import { getDatabase, ref, set, onValue, remove } from "firebase/database";
 
 export default function Chats() {
-  const dispatch = useDispatch();
-  //
   const deleteChatHandler = (event) => {
-    dispatch(deleteChat());
+    //dispatch(deleteChat());
+    const db = getDatabase();
+    const auth = getAuth();
+    //
+    if (auth == null) 
+        throw new Error('auth не найден');
+    if (!auth.hasOwnProperty('currentUser'))
+        throw new Error('auth.currentUser не найдено');
+    
+    //email учетной записи
+    const email = auth.currentUser.email;
+    if (email.trim() != '') {
+      //количество элементов
+      const dbRef = ref(db, '/chats');
+      let total = 0;
+      onValue(dbRef, (snapshot) => {
+        snapshot.forEach((item) => {
+          total += 1;
+        });
+      });
+
+      let lastDbRef = ref(db, `/chats/${total}`);
+      remove(lastDbRef).catch(e => console.log(e));
+    }
   };
-  console.log(useSelector((state) => state));//вывод значений стора
   //
   return (
     <Button
