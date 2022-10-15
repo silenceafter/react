@@ -22,7 +22,6 @@ const Registration = () => {
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const authed = useSelector(getAuthed, shallowEqual);
     //
     const registrationHandler = (event) => {
         event.preventDefault();
@@ -30,11 +29,13 @@ const Registration = () => {
         createUserWithEmailAndPassword(auth, email, password)
             .then((userCredential) => {
                 //create
+                let authed = false;
                 onAuthStateChanged(auth, (user) => 
                     user 
-                        ? dispatch(updateAuthed(true)) 
-                        : dispatch(updateAuthed(false))
+                        ? authed = true
+                        : authed = false
                 );
+                dispatch(updateAuthed(authed));
 
                 //редирект
                 if (authed)//!

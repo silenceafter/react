@@ -7,7 +7,7 @@ export default function Chats() {
   const dispatch = useDispatch();
   //
   const addChatHandler = (event) => {
-    dispatch(addChat());    
+    dispatch(addChat());
   };
   console.log(useSelector((state) => state));//вывод значений стора
   //

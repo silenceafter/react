@@ -11,17 +11,25 @@ import CustomMessageForm from '../components/CustomMessageForm.js';
 import CustomRobotAnswer from '../components/CustomRobotAnswer.js';
 import { getChats } from '../store/chatsSelectors.js';
 import { getMessages } from '../store/messagesSelectors.js';
+import { getAuthed } from '../store/authedSelectors.js';
+import { firebase_app } from '../services/firebase.js';
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import { getDatabase } from "firebase/database";
 
 const Chats = (props) => {
     const id = useParams();
     const navigate = useNavigate();
     const chats = useSelector(getChats, shallowEqual);
     const messages = useSelector(getMessages, shallowEqual);
+    const authed = useSelector(state => state.authed);
     //
     useEffect(() => {
-        //эта часть бесполезна, т.к. роутер очищает все стейты в App.js при запросе 
+        //проверка доступа
+        if (!authed)
+            return navigate("/Login");
+
         //страницы через адресную строку браузера
-        if (id.hasOwnProperty('id')) {            
+        if (id.hasOwnProperty('id')) {
             let find = false;
             for(let chat of chats) {
                 if (chat.id === parseInt(id.id)) {
@@ -34,8 +42,60 @@ const Chats = (props) => {
                 return navigate("/NotFound");
         }        
     }, [chats]);
+
+    const db = getDatabase();
+    console.log(db);
     //
-    return (
+    if (authed) {
+        return (
+            <Box display="flex" flexDirection="column" alignItems="stretch" padding={1}>
+                <Box display="flex" flexDirection="row" alignItems="stretch" padding={1}>
+                    {
+                    <Box sx={{ border: 1, width: '100%', bgcolor: 'background.paper' }}>
+                        <List sx={{width: '20rem'}}>
+                        {                        
+                            chats.map((element, index) => {
+                            return (                         
+                            <Link to={`/chats/${element.id}`} style={{textDecoration: 'none'}}>
+                            <ListItem button key={index.toString()}>
+                                <ListItemText sx={{textAlign: 'center'}} primary={element.name}/>
+                            </ListItem>
+                            </Link>                                         
+                            );
+                        })
+                        } 
+                        </List>          
+                    </Box>
+                    }
+                    <Box sx={{ border: 1, width: '100%', maxWidth: '100%', bgcolor: 'background.paper' }}>
+                        <List sx={{ maxHeight: '15rem', width: '20rem', overflow: 'auto' }}>
+                            {           
+                                messages.map((element, index) => {
+                                    if (id.id == element.chat) {
+                                        return (                  
+                                            <ListItem button key={element.id} autoFocus={true}>
+                                                <ListItemText sx={{ textAlign: 'center' }} primary={'сообщение: ' + element.message} secondary={'автор: ' + element.author}/>
+                                            </ListItem>                  
+                                        );    
+                                    }
+                                })
+                            }
+                        </List>
+                    </Box>          
+                </Box>
+                { 
+                    id.hasOwnProperty('id') 
+                        ? <MessageForm value={{props: props.value, id: id.id}}/> 
+                        : <ChatForm value={{props: props.value, id: id.id}} />
+                }
+            </Box>
+        );
+    } else {
+        return (
+            <Box display="flex" flexDirection="column" alignItems="stretch" padding={1}></Box>
+        );
+    }
+    /*return (
         <Box display="flex" flexDirection="column" alignItems="stretch" padding={1}>
             <Box display="flex" flexDirection="row" alignItems="stretch" padding={1}>
                 {
@@ -77,7 +137,7 @@ const Chats = (props) => {
                     : <ChatForm value={{props: props.value, id: id.id}} />
             }
         </Box>
-    );
+    );*/
 };
 
 const ChatForm = (props) => {
