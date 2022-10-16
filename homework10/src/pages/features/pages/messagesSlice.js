@@ -30,8 +30,6 @@ export const messagesSlice = createSlice({
       return new_state;
     },
     addMessage: (state, action) => {     
-        /*const value = action.payload;
-        return [...state, {id: state.length + 1, chat: value.chat, author: value.author, message: value.message}];*/
       //добавить сообщение
       const value = action.payload;
       const db = getDatabase();

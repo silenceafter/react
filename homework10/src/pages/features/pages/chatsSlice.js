@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { getAuth } from "firebase/auth";
-import { getDatabase, ref, set, remove, onValue } from "firebase/database";
+import { getDatabase, ref, set, remove, onValue } from "firebase/database";//firebase
 
 export const chatsSlice = createSlice({
   name: 'chat',
